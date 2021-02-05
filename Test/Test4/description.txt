@@ -1,0 +1,16 @@
+Test des résultats des 10 fichiers les plus recherchés dans un fichier log.
+Nous avons inséré divers lignes dont le nom du fichier cible diffère. 
+Nous avons choisi d'insérer plus de 10 noms de fichier cibles afin de montrer l'algorithme ne sélectionne que les 10 plus recherchés.
+Les différents noms de fichier cibles sont : 
+/top1 -> 20 occurrences 
+/top2 -> 19 occurrences 
+/top3 -> 16 occurrences 
+/top4 -> 15 occurrences 
+/top5 -> 10 occurrences 
+/file -> 5 occurrences 
+/file1 -> 3 occurrences 
+/file2 -> 3 occurrences 
+/file3 -> 2 occurrences 
+/file4 -> 2 occurrences 
+/nonAffiche1 -> 1 occurrence
+/nonAffiche2 -> 1 occurrence 
