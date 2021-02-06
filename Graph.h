@@ -9,22 +9,19 @@
 //---------- Interface de la classe <Graph> (fichier Graph.h) ----------------
 #if ! defined ( Graph_H )
 #define Graph_H
+
+//--------------------------------------------------- Interfaces utilisées
 #include <iostream>
 #include <cstring>
 #include <map>
 #include <set>
-
-//--------------------------------------------------- Interfaces utilisées
-
 #include "Noeud.h"
-//------------------------------------------------------------- Constantes
-
-//------------------------------------------------------------------ Types
 
 //------------------------------------------------------------------------
 // Rôle de la classe <Graph>
-//
-//
+/*
+
+*/
 //------------------------------------------------------------------------
 
 class Graph 
@@ -33,61 +30,52 @@ class Graph
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+   void AjouterLien(std::string cible, std::string reference);
+   /* Mode d'emploi :
+    Cette méthode permet de 
 
+    */
 
-//------------------------------------------------- Surcharge d'opérateurs
-    //Graph & operator = ( const Graph & unGraph );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+    void genererGraph(std::ofstream & flux) const;
+    /* Mode d'emploi :
+    Cette méthode permet de 
+
+    */
+
+    void AfficherGraph()const;
+    /* Mode d'emploi :
+    Cette méthode permet de 
+
+    */
+
+    void ConserverLien(std::set<std::string> top10);
+    /* Mode d'emploi :
+    Cette méthode permet de 
+
+    */ 
 
 
 //-------------------------------------------- Constructeurs - destructeur
     Graph ( const Graph & unGraph );
     // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
-
+    // Construit un Graph par copie d'un Graph
+    
     Graph ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
+    // Mode d'emploi (constructeur) :
+    // créé un nouveau Graph
+    
     virtual ~Graph ( );
-    // Mode d'emploi :
+    // Mode d'emploi (destructeur) :
     //
-    // Contrat :
-    //
-
-
-    void AjouterLien(std::string cible, std::string reference);
-
-    void genererGraph(std::ofstream & flux) const;
-
-    void AfficherGraph()const;
-
-    void ConserverLien(std::set<std::string> top10); 
-
 
 //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Attributs protégées
 int nbNoeuds = 0;
 std::map <std::string, Noeud> arcs;
-//----------------------------------------------------- Attributs protégés
 
 };
-
-//-------------------------------- Autres définitions dépendantes de <Graph>
 
 #endif // Graph_H
 

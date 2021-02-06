@@ -9,20 +9,17 @@
 //---------- Interface de la classe <Noeud> (fichier Noeud.h) ----------------
 #if ! defined ( Noeud_H )
 #define Noeud_H
+
+//--------------------------------------------------- Interfaces utilisées
 #include <map>
 #include <cstring>
 #include <iostream>
 
-//--------------------------------------------------- Interfaces utilisées
-
-//------------------------------------------------------------- Constantes
-
-//------------------------------------------------------------------ Types
-
 //------------------------------------------------------------------------
 // Rôle de la classe <Noeud>
-//
-//
+/*
+
+*/
 //------------------------------------------------------------------------
 class Graph;
 class Noeud 
@@ -31,61 +28,43 @@ class Noeud
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+    void AjouterLien(std::string reference);
+    /* Mode d'emploi :
+    Cette méthode permet de 
 
+    */
 
-//------------------------------------------------- Surcharge d'opérateurs
-    //Noeud & operator = ( const Noeud & unNoeud );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
+    void IncrementerLien(std::string reference);
+    /* Mode d'emploi :
+    Cette méthode permet de 
+    
+    */
 
 //-------------------------------------------- Constructeurs - destructeur
     Noeud ( const Noeud & unNoeud );
     // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
-
+    // Construit un Noeud par copie d'un Noeud
+    
     Noeud(const std::string reference);
+    // Mode d'emploi (constructeur) :
+    //
 
     Noeud ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
 
     virtual ~Noeud ( );
-    // Mode d'emploi :
+    // Mode d'emploi (destructeur) :
     //
-    // Contrat :
-    //
-
-    void AjouterLien(std::string reference);
-
-    void IncrementerLien(std::string reference);
-
-
+    
     friend Graph;
 
 
 //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+//----------------------------------------------------- Attributs protégées
     std::map <std::string, int> lienReference; // contient pour chaque reference, le nombre de hit vers une cible
 
-//----------------------------------------------------- Attributs protégés
-
 };
-
-//-------------------------------- Autres définitions dépendantes de <Noeud>
 
 #endif // Noeud_H
 

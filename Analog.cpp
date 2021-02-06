@@ -96,7 +96,6 @@ void Analog::lireFichier(string & fichier, int * optionHeure) {
 
                 extensionFichier = token;
 
-
                 set<string> extensionsNonAutorisees;
                 extensionsNonAutorisees.insert("bmp");
                 extensionsNonAutorisees.insert("ai");
