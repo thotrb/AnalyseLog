@@ -1,9 +1,9 @@
 /*************************************************************************
                            Graph  -  description
                              -------------------
-    début                : $DATE$
-    copyright            : (C) $YEAR$ par $AUTHOR$
-    e-mail               : $EMAIL$
+    début                : $06/02/2021$
+    copyright            : (C) $2021$ par $De Roover Trubert$
+    e-mail               : $ $
 *************************************************************************/
 
 //---------- Réalisation de la classe <Graph> (fichier Graph.cpp) ------------
@@ -13,86 +13,55 @@
 //-------------------------------------------------------- Include système
 #include <iostream>
 #include <fstream>
-using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "Graph.h"
-
-//------------------------------------------------------------- Constantes
-
-//----------------------------------------------------------------- PUBLIC
-
-//----------------------------------------------------- Méthodes publiques
-// type Graph::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-// Algorithme :
-//
-//----- Fin de operator =
-
+using namespace std;
 
 //-------------------------------------------- Constructeurs - destructeur
 Graph::Graph ( const Graph & unGraph )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au constructeur de copie de <Graph>" << endl;
 #endif
 } //----- Fin de Graph (constructeur de copie)
 
-
 Graph::Graph ( )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au constructeur de <Graph>" << endl;
 #endif
 } //----- Fin de Graph
 
-
 Graph::~Graph ( )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au destructeur de <Graph>" << endl;
 #endif
 } //----- Fin de ~Graph
 
+
 void Graph::AjouterLien(string cible, string reference){
 
     //inserer un nouvel élélement dans le noeud 
-
 
     if(arcs.find(cible) == arcs.end()){
         //document jamais recherche encore
         Noeud nouveauNoeud(reference);
         arcs.insert(make_pair(cible, nouveauNoeud));
-
-
-    }else{
+    }
+    else{
 
         //document deja recherche
         if(arcs.find(cible)->second.lienReference.find(reference) == arcs.find(cible)->second.lienReference.end()){
             //reference inconnue
             arcs.find(cible)->second.AjouterLien(reference);
-
-
-        }else{
+        }
+        else{
             //reference connue
             arcs.find(cible)->second.IncrementerLien(reference);
         }
-
     }
-
-
 }
 
 void Graph::AfficherGraph() const {
@@ -105,20 +74,12 @@ void Graph::AfficherGraph() const {
             cout << " - " << iterator2->first << " -> " << iterator2->second << endl;
             iterator2++;
         }
-
         iterator ++;
     }
-
 }
 
 void Graph::ConserverLien(set<string> top10){
 
-    //set<string>::const_iterator it = top10.begin();
-    /**while(it != top10.end()){
-        cout << " K : " << *it << " "  << endl;
-        it++;
-    }
-**/
     map<string, Noeud>::const_iterator iterator = arcs.begin();
 
     for(; iterator!=arcs.end(); ){
@@ -134,7 +95,6 @@ void Graph::ConserverLien(set<string> top10){
 }
 
 void Graph::genererGraph(ofstream & flux) const{
-
 
     flux << "digraph{" << endl;
 
@@ -154,9 +114,8 @@ void Graph::genererGraph(ofstream & flux) const{
         iterator ++;
     }
 
-
-    i =0;   
-    j=arcs.size();
+    i = 0;   
+    j = arcs.size();
     iterator = arcs.begin();
     while(iterator != arcs.end()){
          map<string, int>::const_iterator iterator2 = iterator->second.lienReference.begin();
@@ -165,22 +124,13 @@ void Graph::genererGraph(ofstream & flux) const{
             iterator2++;
             j++;
         }
-
         iterator ++;
         i++;
     }
 
-
     flux << "}" << endl;
-
     flux.close();
-
 
 }
 
-
-
-//------------------------------------------------------------------ PRIVE
-
-//----------------------------------------------------- Méthodes protégées
 

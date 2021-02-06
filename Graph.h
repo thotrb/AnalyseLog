@@ -14,7 +14,6 @@
 #include <map>
 #include <set>
 
-using namespace std;
 //--------------------------------------------------- Interfaces utilisées
 
 #include "Noeud.h"
@@ -69,13 +68,13 @@ public:
     //
 
 
-    void AjouterLien(string cible, string reference);
+    void AjouterLien(std::string cible, std::string reference);
 
-    void genererGraph(ofstream & flux) const;
+    void genererGraph(std::ofstream & flux) const;
 
     void AfficherGraph()const;
 
-    void ConserverLien(set<string> top10); 
+    void ConserverLien(std::set<std::string> top10); 
 
 
 //------------------------------------------------------------------ PRIVE
@@ -83,7 +82,7 @@ public:
 protected:
 //----------------------------------------------------- Méthodes protégées
 int nbNoeuds = 0;
-map <string, Noeud> arcs;
+std::map <std::string, Noeud> arcs;
 //----------------------------------------------------- Attributs protégés
 
 };

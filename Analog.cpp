@@ -1,9 +1,9 @@
 /*************************************************************************
                            Analog  -  description
                              -------------------
-    début                : $DATE$
-    copyright            : (C) $YEAR$ par $AUTHOR$
-    e-mail               : $EMAIL$
+    début                : $06/02/2021$
+    copyright            : (C) $2021$ par $De Roover Trubert$
+    e-mail               : $ $
 *************************************************************************/
 
 //---------- Réalisation de la classe <Analog> (fichier Analog.cpp) ------------
@@ -19,34 +19,12 @@
 #include <vector>
 #include <set>
 
-
-using namespace std;
-
 //------------------------------------------------------ Include personnel
 #include "Analog.h"
-
-//------------------------------------------------------------- Constantes
-
-//----------------------------------------------------------------- PUBLIC
-
-//----------------------------------------------------- Méthodes publiques
-// type Analog::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-// Algorithme :
-//
-//----- Fin de operator =
-
+using namespace std;
 
 //-------------------------------------------- Constructeurs - destructeur
 Analog::Analog ( const Analog & unAnalog )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au constructeur de copie de <Analog>" << endl;
@@ -55,11 +33,7 @@ Analog::Analog ( const Analog & unAnalog )
 
 
 Analog::Analog ( ) : lectureLog(new LectureLog), graph(new Graph())
-// Algorithme :
-//
 {
-
-
 #ifdef MAP
     cout << "Appel au constructeur de <Analog>" << endl;
 #endif
@@ -67,8 +41,6 @@ Analog::Analog ( ) : lectureLog(new LectureLog), graph(new Graph())
 
 
 Analog::~Analog ( )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au destructeur de <Analog>" << endl;
@@ -76,16 +48,12 @@ Analog::~Analog ( )
 } //----- Fin de ~Analog
 
 
-void Analog::lireFichier(string & fichier) {
+void Analog::lireFichier(string & fichier, int * optionHeure) {
 
-
-
-    //faire traitement sur args
     fstream file(fichier);
     Log l;
     string line;
     map<string, int> classementRecherches;
-
 
     multimap<int, string, greater <int> > multimp;
 
@@ -112,18 +80,12 @@ void Analog::lireFichier(string & fichier) {
 
             }
 
-            if(optionE && !optionT){
+            else if(optionE && !optionT){
 
                 string delimiter = ".";
                 string token;
-                int pos = 0;
+                size_t pos = 0;
                 string extensionFichier, document = l.documentRecherche;
-
-                //vector<string> champs = split(l.documentRecherche, delimiter);
-                //vector<string>::iterator iterator = champs.begin();
-                //iterator++;
-                //string extensionFichier = split(doc , delimiter);
-
 
                 while ((pos = document.find(delimiter)) != string::npos) {
                     token = document.substr(0, pos);
@@ -164,12 +126,35 @@ void Analog::lireFichier(string & fichier) {
 
                 }
             }
+
+            else if(optionT && !optionE) {
+                
+                int heure = l.temps.heure;
+                if(*optionHeure!=23 && (heure==*optionHeure || heure==*optionHeure+1) ){
+                    if(classementRecherches.find(l.documentRecherche) == classementRecherches.end()){
+                        classementRecherches.insert(make_pair(l.documentRecherche, nbOccurence));
+                    }else{
+                        nbOccurence = classementRecherches.find(l.documentRecherche)->second;
+                        nbOccurence ++;
+                        classementRecherches.find(l.documentRecherche)->second += 1;
+                    }
+                    multimp.insert(make_pair(nbOccurence, l.documentRecherche));
+                }
+                else if(*optionHeure==23 && (heure==*optionHeure || heure==0) ){
+                    if(classementRecherches.find(l.documentRecherche) == classementRecherches.end()){
+                        classementRecherches.insert(make_pair(l.documentRecherche, nbOccurence));
+                    }else{
+                        nbOccurence = classementRecherches.find(l.documentRecherche)->second;
+                        nbOccurence ++;
+                        classementRecherches.find(l.documentRecherche)->second += 1;
+                    }
+                    multimp.insert(make_pair(nbOccurence, l.documentRecherche));
+                }
+            }
                 
             graph->AjouterLien(l.documentRecherche, l.referer);
 
-
-
-        }
+        }//fin du while lisant les lignes du 
 
             set<string> top10; 
             multimap<int, string>::iterator iterator = multimp.begin();
@@ -180,94 +165,62 @@ void Analog::lireFichier(string & fichier) {
                     top10.insert(iterator->second);
                     cout<<iterator->second << " : " << iterator->first<< endl;
                     nbElement ++;
-           
                 }
                 iterator++;
-
             }
 
             graph->ConserverLien(top10);
 
-    }else{
+    }
+    else{
         cerr << "Nom de fichier invalide" << endl;
     }
-
-
-    //graph->AfficherGraph();
-    //passer chaque ligne à LectureLog pour récuperer un Log exploitable
-
-    //passer ce Log à graph pour qu'il puisse remplir ses Map
-
-    //traiter pour faire le classement en fonctions des options rentrées par l'utilisateur
-        //créer un map<string : nomFichierRecherche, int : nbOccurence>
-        //classer par nbOccurence
 }
 
-/**
-
-    string split(string & src, string delim) {
-        int pos = 0;
-        string token = " ";
-        while ((pos = src.find(delim)) != string::npos) {
-            token = src.substr(0, pos);
-            src.erase(0, pos + delim.length());
-        }
-        return token;
-
-
-    }
-**/
 
 
 void Analog::setOption(string option){
 
     if(option == "-e"){
         optionE = true;
-        cout << "E" << endl;
     }
 
-    if(option == "-g"){
-        optionG = true;
-        cout << "G" << endl;
-
+    else if(option == "-t"){
+        optionT = true;
     }
-
     
+    else if(option == "-g"){
+        optionG = true;
+    }
 }
 
 void Analog::genererGraph(string nomFichierSortie) const{
 
     ofstream stream(nomFichierSortie);
-    if(stream)    
-    {
+    if(stream){
         graph->genererGraph(stream);
     }
-    else
-    {
+    else{
         cout << "ERREUR: Impossible d'ouvrir le fichier." << endl;
     }
-
-    
 }
-
-
 
 
 int main(int argc, char* argv[]){
 
     Analog * analog(new Analog());
     string nomFichier, option, nomFichierGraphe;
-
+    int optionHeure = 0;
+    int * ptHeure = &optionHeure;
 
     switch (argc){
 
-        case 2 :    
-            //cas où on n'a que le nom du fichier
+        case 2 :  //cas où on n'a que le nom du fichier
             nomFichier = argv[1];
-            analog->lireFichier(nomFichier);
+            analog->lireFichier(nomFichier, ptHeure);
             break;
-            //options : -e 
-        case 3 : 
+             
+        case 3 : //options : -e
             option = argv[1];
             nomFichier = argv[2];
 
@@ -275,27 +228,41 @@ int main(int argc, char* argv[]){
                 analog->setOption(option);
             }
 
-            analog->lireFichier(nomFichier);
+            else{
+                cout<<"L'option n'est pas proposée, cas par défault : "<<endl;
+            }
+            analog->lireFichier(nomFichier, ptHeure);
 
         
         break;
-            //options : (-g nomFichier.pdf ou -t heure) + nomFichier
-        case 4 : 
+            
+        case 4 : //options : (-g nomFichier.pdf ou -t heure) + nomFichier
             option = argv[1];
-            nomFichierGraphe = argv[2];
             nomFichier = argv[3];
-
-            if(option == "-g"){
+            
+            if(option == "-t"){
+                optionHeure = stoi(argv[2]);
+                if (optionHeure<24 && optionHeure>0){
+                    analog->setOption(option);
+                    ptHeure = &optionHeure;
+                }
+                else{
+                    cout<<"L'heure saisie n'est pas correct, l'option -t doit être accompagnée d'un nombre entre 0 et 23 "<<endl;
+                    cout<<"Cas sans options par défault : "<<endl;
+                }
+                
+            }
+            else if(option == "-g"){
+                nomFichierGraphe = argv[2];
                 analog->setOption(option);
-                analog->lireFichier(nomFichier);
                 analog->genererGraph(nomFichierGraphe);
             }
+
+            else{
+                cout<<"L'option n'est pas proposée, nous considérons le cas sans options : "<<endl;
+            }
+            analog->lireFichier(nomFichier, ptHeure);
+        break;
     }
 }
-
-
-
-//------------------------------------------------------------------ PRIVE
-
-//----------------------------------------------------- Méthodes protégées
 

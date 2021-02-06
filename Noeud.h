@@ -12,7 +12,6 @@
 #include <map>
 #include <cstring>
 #include <iostream>
-using namespace std;
 
 //--------------------------------------------------- Interfaces utilisées
 
@@ -54,7 +53,7 @@ public:
     // Contrat :
     //
 
-    Noeud(const string reference);
+    Noeud(const std::string reference);
 
     Noeud ( );
     // Mode d'emploi :
@@ -68,9 +67,9 @@ public:
     // Contrat :
     //
 
-    void AjouterLien(string reference);
+    void AjouterLien(std::string reference);
 
-    void IncrementerLien(string reference);
+    void IncrementerLien(std::string reference);
 
 
     friend Graph;
@@ -80,7 +79,7 @@ public:
 
 protected:
 //----------------------------------------------------- Méthodes protégées
-    map <string, int> lienReference; // contient pour chaque reference, le nombre de hit vers une cible
+    std::map <std::string, int> lienReference; // contient pour chaque reference, le nombre de hit vers une cible
 
 //----------------------------------------------------- Attributs protégés
 

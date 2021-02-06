@@ -1,9 +1,9 @@
 /*************************************************************************
                            LectureLog  -  description
                              -------------------
-    début                : $DATE$
-    copyright            : (C) $YEAR$ par $AUTHOR$
-    e-mail               : $EMAIL$
+    début                : $06/02/2021$
+    copyright            : (C) $2021$ par $De Roover Trubert$
+    e-mail               : $ $
 *************************************************************************/
 
 //---------- Réalisation de la classe <LectureLog> (fichier LectureLog.cpp) ------------
@@ -12,45 +12,29 @@
 
 //-------------------------------------------------------- Include système
 #include <iostream>
-using namespace std;
 
 //------------------------------------------------------ Include personnel
 #include "LectureLog.h"
+using namespace std;
 
 //------------------------------------------------------------- Constantes
 #define SIZE 50
-//----------------------------------------------------------------- PUBLIC
-
-//----------------------------------------------------- Méthodes publiques
-// type LectureLog::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-//LectureLog & LectureLog::operator = ( const LectureLog & unLectureLog )
-// Algorithme :
-//
-//{
-//} //----- Fin de operator =
-
 
 //-------------------------------------------- Constructeurs - destructeur
 LectureLog::LectureLog ( const LectureLog & unLectureLog )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au constructeur de copie de <LectureLog>" << endl;
 #endif
 } //----- Fin de LectureLog (constructeur de copie)
 
+LectureLog::LectureLog ( ) : m_dernierLog(){
+#ifdef MAP
+    cout << "Appel au constructeur de <LectureLog>" << endl;
+#endif
+} //----- Fin de Analog
 
 LectureLog::~LectureLog ( )
-// Algorithme :
-//
 {
 #ifdef MAP
     cout << "Appel au destructeur de <LectureLog>" << endl;
@@ -58,10 +42,20 @@ LectureLog::~LectureLog ( )
 } //----- Fin de ~LectureLog
 
 
+//----------------------------------------------------- Méthodes publiques
+
+string LectureLog::Extraire(string delimiter, string * ptBlocTemps){
+    string morceauLigne;
+    int positionDelimiter = (*ptBlocTemps).find(delimiter);
+    morceauLigne = (*ptBlocTemps).substr(0, positionDelimiter);
+    (*ptBlocTemps).erase(0, positionDelimiter + delimiter.length());
+    return morceauLigne;
+}
+
 const Log & LectureLog::lireLigne(string & ligneLog) {
 
     string delimiter = " ";
-    int pos = 0;
+    size_t pos = 0;
     string token;
     string informations[SIZE];
     int i=0;
@@ -73,41 +67,31 @@ const Log & LectureLog::lireLigne(string & ligneLog) {
     }
     informations[i] = ligneLog;
 
-    dernierLog.date = informations[3];
-    dernierLog.heure = informations[3];
-    dernierLog.decallageHoraire = informations[4];
-    dernierLog.typeRequete = informations[5];
-    dernierLog.documentRecherche = informations[6];
-    dernierLog.protocole = informations[7];
-    dernierLog.codeRetour = informations[8];
-    dernierLog.quantiteDonnee = informations[9];
-    dernierLog.referer = informations[10];
-
-/**
+    informations[3].erase(0, 1); //On efface le [
+    string * blocTemps = &informations[3];
     delimiter = "/";
-    while ((pos = dernierLog.documentRecherche.find(delimiter)) != string::npos) {
-        token = dernierLog.documentRecherche.substr(0, pos);
-        dernierLog.documentRecherche.erase(0, pos + delimiter.length());
-    }
-    dernierLog.referer = token;
+    m_dernierLog.temps.jour = stoi(Extraire(delimiter, blocTemps));
+    m_dernierLog.temps.mois = Extraire(delimiter, blocTemps);
 
-**/
+    delimiter = ":";
+    m_dernierLog.temps.annee = stoi(Extraire(delimiter, blocTemps));
+    m_dernierLog.temps.heure = stoi(Extraire(delimiter, blocTemps));
+    m_dernierLog.temps.minute = stoi(Extraire(delimiter, blocTemps));
+    m_dernierLog.temps.seconde = stoi(informations[3]); 
+
+    m_dernierLog.decallageHoraire = informations[4];
+    m_dernierLog.typeRequete = informations[5];
+    m_dernierLog.documentRecherche = informations[6];
+    m_dernierLog.protocole = informations[7];
+    m_dernierLog.codeRetour = informations[8];
+    m_dernierLog.quantiteDonnee = informations[9];
+    m_dernierLog.referer = informations[10];
 
     //nettoyer l'url renseigner l'url de base dans le fichier config
-
-    dernierLog.navigateur = "";
-
+    m_dernierLog.navigateur = "";
     for(int i=10; i<SIZE; i++) {
-        dernierLog.navigateur +=  " " + informations[i];
+        m_dernierLog.navigateur +=  " " + informations[i];
     }
 
-
-
-
-    return dernierLog;   
+    return m_dernierLog;   
 }
-
-//------------------------------------------------------------------ PRIVE
-
-//----------------------------------------------------- Méthodes protégées
-

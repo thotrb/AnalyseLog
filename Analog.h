@@ -15,7 +15,6 @@
 
 #include "LectureLog.h"
 #include "Graph.h"
-using namespace std;
 
 //------------------------------------------------------------- Constantes
 
@@ -33,51 +32,29 @@ class Analog
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
 
+void lireFichier(std::string & fichier, int * optionHeure);
 
-//------------------------------------------------- Surcharge d'opérateurs
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
+void setOption(std::string option);
 
-
-//-------------------------------------------- Constructeurs - destructeur
-    Analog ( const Analog & unAnalog );
-    // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
-
-    Analog ();
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
-    virtual ~Analog ( );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
-    void lireFichier(string & fichier);
-
-    string split(string & src, string delim);
-
-    void setOption(string option);
-
-    void genererGraph(string nomFichierSortie) const;
-    int main(int argc, char* argv[]);
+void genererGraph(std::string nomFichierSortie) const;
 
 
 
     
+//-------------------------------------------- Constructeurs - destructeur
+    
+    Analog ( const Analog & unAnalog );
+    // Mode d'emploi (constructeur de copie) :
+    // Construit un Analog par copie d'un Analog
+
+    Analog ();
+    // Mode d'emploi (constructeur) :
+    // Construit un LectureLog en lui allouant la mémoire nécessaire pour ces deux pointeurs
+
+    virtual ~Analog ( );
+    // Mode d'emploi (destructeur) :
+    // Libére la mémoire allouée aux deux pointeurs
 
 
 //------------------------------------------------------------------ PRIVE
