@@ -30,14 +30,14 @@ public:
 //----------------------------------------------------- Méthodes publiques
     void AjouterLien(std::string reference);
     /* Mode d'emploi :
-    Cette méthode permet de 
-
+    Cette méthode permet d'insérer un nouvel élément dans la map à partir 
+    d'une clé.
     */
 
     void IncrementerLien(std::string reference);
     /* Mode d'emploi :
-    Cette méthode permet de 
-    
+    Cette méthode permet d'incrémenter la valeur de l'entier à partir
+    d'un clé.
     */
 
 //-------------------------------------------- Constructeurs - destructeur
@@ -47,13 +47,13 @@ public:
     
     Noeud(const std::string reference);
     // Mode d'emploi (constructeur) :
-    //
+    // Constuit un noeud et insère un nouvel élément dans la map.
 
     Noeud ( );
 
     virtual ~Noeud ( );
     // Mode d'emploi (destructeur) :
-    //
+    // Libére la mémoire allouée.
     
     friend Graph;
 

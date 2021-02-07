@@ -34,10 +34,13 @@ class Analog
 public:
 //----------------------------------------------------- Méthodes publiques
 
-    void lireFichier(std::string & fichier, int * optionHeure);
+    int lireFichier(std::string & fichier, int * optionHeure);
     /* Mode d'emploi :
     Cette méthode permet de lire un fichier en s'appuyant de la méthode lireLigne de LectureLog. Cette méthode permet de
-    réaliser la liste des 10 documents les plus consultés par ordre décroissant de popularité en prenant en compte 3 choix d'options
+    réaliser la liste des 10 documents les plus consultés par ordre décroissant de popularité en prenant en compte 3 choix d'options.
+    Rempli également le graph à chaque lecture de ligne.
+    Retourne 1 si le stream ne s'est pas ouvert normalement
+    Retourne 0 sinon
     */
 
     void setOption(std::string option);
@@ -45,9 +48,18 @@ public:
     Permet de mettre à true le booleen correspondant à l'option demandée
     */
 
-    void genererGraph(std::string nomFichierSortie) const;
+    int genererGraph(std::string nomFichierSortie) const;
+   /* Mode d'emploi :
+    Demande a graph de créer le code à insérer dans le fichier entré en paramètre.
+    Retourne 1 si le stream ne s'est pas ouvert normalement
+    Retourne 0 sinon
+    */
 
-
+   int verifierExtensionFichierDot(std::string nomFichier) const;
+    /* Mode d'emploi :
+    Retourne 1 si le fichier passé en parametre est de type .dot
+    Retourne 0 sinon
+    */
 
     
 //-------------------------------------------- Constructeurs - destructeur

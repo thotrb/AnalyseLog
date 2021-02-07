@@ -42,18 +42,38 @@ Analog::Analog ( ) : lectureLog(new LectureLog), graph(new Graph())
 
 Analog::~Analog ( )
 {
+delete graph;
+delete lectureLog;
 #ifdef MAP
     cout << "Appel au destructeur de <Analog>" << endl;
 #endif
 } //----- Fin de ~Analog
 
 
-void Analog::lireFichier(string & fichier, int * optionHeure) {
+int Analog::lireFichier(string & fichier, int * optionHeure = nullptr) {
 
     fstream file(fichier);
     Log l;
     string line;
     map<string, int> classementRecherches;
+
+    set<string> extensionsNonAutorisees;
+    extensionsNonAutorisees.insert("bmp");
+    extensionsNonAutorisees.insert("ai");
+    extensionsNonAutorisees.insert("eps");
+    extensionsNonAutorisees.insert("jpg");
+    extensionsNonAutorisees.insert("jpeg");
+    extensionsNonAutorisees.insert("pdf");
+    extensionsNonAutorisees.insert("psd");
+    extensionsNonAutorisees.insert("gif");
+    extensionsNonAutorisees.insert("tiff");
+    extensionsNonAutorisees.insert("png");
+    extensionsNonAutorisees.insert("svg");
+    extensionsNonAutorisees.insert("css");
+    extensionsNonAutorisees.insert("jss");
+
+    bool insertion = true;
+
 
     multimap<int, string, greater <int> > multimp;
 
@@ -61,9 +81,11 @@ void Analog::lireFichier(string & fichier, int * optionHeure) {
     if(file.good()) {
         while(getline(file, line)) {
             
+            insertion = true;
             l = lectureLog->lireLigne(line);
             nbOccurence = 1;
             
+            /**
             if(!optionE && !optionT) {
                 //dans le cas sans contraintes
                 
@@ -79,53 +101,55 @@ void Analog::lireFichier(string & fichier, int * optionHeure) {
                 multimp.insert(make_pair(nbOccurence, l.documentRecherche));
 
             }
-
+            
             else if(optionE && !optionT){
+                **/
+                if(optionE){
+                    string delimiter = ".";
+                    string token;
+                    size_t pos = 0;
+                    string extensionFichier, document = l.documentRecherche;
 
-                string delimiter = ".";
-                string token;
-                size_t pos = 0;
-                string extensionFichier, document = l.documentRecherche;
+                    while ((pos = document.find(delimiter)) != string::npos) {
+                        token = document.substr(0, pos);
+                        document.erase(0, pos + delimiter.length());
+                    }
 
-                while ((pos = document.find(delimiter)) != string::npos) {
                     token = document.substr(0, pos);
-                    document.erase(0, pos + delimiter.length());
+
+                    extensionFichier = token;
+
+                    if(extensionsNonAutorisees.find(extensionFichier) != extensionsNonAutorisees.end()){
+
+                        insertion = false;
+
+                    }
                 }
 
-                token = document.substr(0, pos);
+                if(optionT){
+                    int heure = l.temps.heure;
+                    if(heure!=*optionHeure ){
+                        insertion = false;
+                    }
+                    
+                }
 
-                extensionFichier = token;
 
-                set<string> extensionsNonAutorisees;
-                extensionsNonAutorisees.insert("bmp");
-                extensionsNonAutorisees.insert("ai");
-                extensionsNonAutorisees.insert("eps");
-                extensionsNonAutorisees.insert("jpg");
-                extensionsNonAutorisees.insert("jpeg");
-                extensionsNonAutorisees.insert("pdf");
-                extensionsNonAutorisees.insert("psd");
-                extensionsNonAutorisees.insert("gif");
-                extensionsNonAutorisees.insert("tiff");
-                extensionsNonAutorisees.insert("png");
-                extensionsNonAutorisees.insert("svg");
-                extensionsNonAutorisees.insert("css");
-                extensionsNonAutorisees.insert("jss");
-
-                if(extensionsNonAutorisees.find(extensionFichier) == extensionsNonAutorisees.end()){
+                if(insertion){
                     if(classementRecherches.find(l.documentRecherche) == classementRecherches.end()){
                         nbOccurence = 1;
                         classementRecherches.insert(make_pair(l.documentRecherche, nbOccurence));
                     }else{
                         nbOccurence = classementRecherches.find(l.documentRecherche)->second;
                         nbOccurence ++;
-                        classementRecherches.find(l.documentRecherche)->second += 1;
-                        
+                        classementRecherches.find(l.documentRecherche)->second += 1;  
                     }
                     multimp.insert(make_pair(nbOccurence, l.documentRecherche));
-
                 }
-            }
+                graph->AjouterLien(l.documentRecherche, l.referer);
 
+        }
+/**
             else if(optionT && !optionE) {
                 
                 int heure = l.temps.heure;
@@ -152,27 +176,32 @@ void Analog::lireFichier(string & fichier, int * optionHeure) {
             }
                 
             graph->AjouterLien(l.documentRecherche, l.referer);
+**/
 
-        }//fin du while lisant les lignes du 
-
-            set<string> top10; 
-            multimap<int, string>::iterator iterator = multimp.begin();
-            int nbElement = 0;
-            while(iterator != multimp.end() && nbElement < 10) {
+        //Conserve uniquement les 10 premiers éléments recherchés
+        set<string> top10; 
+        multimap<int, string>::iterator iterator = multimp.begin();
+        int nbElement = 0;
+        while(iterator != multimp.end() && nbElement < 10) {
                 
-                if(top10.find(iterator->second) == top10.end()) {
-                    top10.insert(iterator->second);
-                    cout<<iterator->second << " : " << iterator->first<< endl;
-                    nbElement ++;
-                }
-                iterator++;
+            if(top10.find(iterator->second) == top10.end()) {
+                top10.insert(iterator->second);
+                cout << iterator->second << " (" << iterator->first<< " hits)" << endl;
+                nbElement ++;
             }
+            iterator++;
+        }
 
+        if(optionG){
             graph->ConserverLien(top10);
+        }
 
-    }
-    else{
-        cerr << "Nom de fichier invalide" << endl;
+
+        return 0;
+
+    }else{
+        cerr << "Invalid filename : " << fichier << endl;
+        return 1;
     }
 }
 
@@ -193,14 +222,38 @@ void Analog::setOption(string option){
     }
 }
 
-void Analog::genererGraph(string nomFichierSortie) const{
+int Analog::genererGraph(string nomFichierSortie) const{
+    
 
-    ofstream stream(nomFichierSortie);
-    if(stream){
-        graph->genererGraph(stream);
+        ofstream stream(nomFichierSortie);
+        if(stream){
+            graph->genererGraph(stream);
+            return 0;
+        }
+        else{
+            cerr << "ERROR: Opening stream failed " << nomFichierSortie << endl;
+            return 1;
+        }
+    
+    
+}
+
+int Analog::verifierExtensionFichierDot(string nomFichier) const {
+    string delimiter = ".";
+    string token;
+    size_t pos = 0;
+    string extensionFichier;
+    while ((pos = nomFichier.find(delimiter)) != string::npos) {
+        token = nomFichier.substr(0, pos);
+        nomFichier.erase(0, pos + delimiter.length());
     }
-    else{
-        cout << "ERREUR: Impossible d'ouvrir le fichier." << endl;
+    token = nomFichier.substr(0, pos);
+    extensionFichier = token;
+    if(extensionFichier != "dot"){
+        cerr << "ERROR: Wrong extension .dot expected" << endl;
+        return 1;
+    }else{
+        return 0;
     }
 }
 
@@ -208,7 +261,7 @@ void Analog::genererGraph(string nomFichierSortie) const{
 int main(int argc, char* argv[]){
 
     Analog * analog(new Analog());
-    string nomFichier, option, nomFichierGraphe;
+    string nomFichier, option, option2, option3, nomFichierGraphe;
     int optionHeure = 0;
     int * ptHeure = &optionHeure;
 
@@ -216,7 +269,9 @@ int main(int argc, char* argv[]){
 
         case 2 :  //cas où on n'a que le nom du fichier
             nomFichier = argv[1];
-            analog->lireFichier(nomFichier, ptHeure);
+            if(analog->lireFichier(nomFichier, ptHeure) != 0){
+                return 1;
+            }
             break;
              
         case 3 : //options : -e
@@ -225,14 +280,14 @@ int main(int argc, char* argv[]){
 
             if(option == "-e"){
                 analog->setOption(option);
+            }else{
+                cerr<<"Illegal option : " << option <<endl;
+                return 1;
             }
-
-            else{
-                cout<<"L'option n'est pas proposée, cas par défault : "<<endl;
+            if(analog->lireFichier(nomFichier, ptHeure) != 0){
+                return 1;
             }
-            analog->lireFichier(nomFichier, ptHeure);
-
-        
+    
         break;
             
         case 4 : //options : (-g nomFichier.pdf ou -t heure) + nomFichier
@@ -240,28 +295,335 @@ int main(int argc, char* argv[]){
             nomFichier = argv[3];
             
             if(option == "-t"){
+
+                analog->setOption(option);
                 optionHeure = stoi(argv[2]);
+
                 if (optionHeure<24 && optionHeure>0){
-                    analog->setOption(option);
                     ptHeure = &optionHeure;
                 }
                 else{
-                    cout<<"L'heure saisie n'est pas correct, l'option -t doit être accompagnée d'un nombre entre 0 et 23 "<<endl;
-                    cout<<"Cas sans options par défault : "<<endl;
+                    cerr<<"Illegal value : " << optionHeure <<endl;
+                    return 1;
+                }
+                if(analog->lireFichier(nomFichier, ptHeure) != 0){
+                    return 1;
                 }
                 
             }
             else if(option == "-g"){
+
                 nomFichierGraphe = argv[2];
                 analog->setOption(option);
-                analog->genererGraph(nomFichierGraphe);
+                if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                    return 1;
+                }else{
+                    if(analog->lireFichier(nomFichier, ptHeure) != 0)  
+                        return 1;
+                }
+                if(analog->genererGraph(nomFichierGraphe) != 0) {
+                    return 1;
+                }
             }
-
             else{
-                cout<<"L'option n'est pas proposée, nous considérons le cas sans options : "<<endl;
+                cerr<<"Illegal option : " << option <<endl;
+                return 1;
             }
-            analog->lireFichier(nomFichier, ptHeure);
-        break;
+            
+            break;
+        
+        case 5 : 
+            //options : -e + (-g nomFichier.pdf ou -t heure) + nomFichier
+            //options : (-g nomFichier.pdf ou -t heure) + -e + nomFichier
+            option = argv[1];
+            nomFichier = argv[4];
+
+            if(option == "-e"){
+                analog->setOption(option);
+
+                option2 = argv[2];
+                if(option2 == "-g"){
+
+                    analog->setOption(option2);
+
+                    nomFichierGraphe = argv[3];
+                    if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                        return 1;
+                    }else{
+                        if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                            delete analog;
+                            return 1;
+                        } 
+                    }
+                    if(analog->genererGraph(nomFichierGraphe) != 0) {
+                        delete analog;
+                        return 1;
+                    }
+
+                }else if (option2 == "-t"){
+                    
+                    analog->setOption(option2);
+                    optionHeure = stoi(argv[3]);
+
+                    if (optionHeure<24 && optionHeure>0){
+                        ptHeure = &optionHeure;
+                    }
+                    else{
+                        cerr<<"Illegal value : " << optionHeure <<endl;
+                        delete analog;
+                        return 1;
+                    }
+                   
+                    if(analog->lireFichier(nomFichier, ptHeure) != 0){
+                        delete analog;
+                        return 1;
+                    }
+                }else{
+                    delete analog;
+                    cerr<<"Illegal option : " << option2 <<endl;
+                    return 1;
+                }
+
+            }else if (option == "-g"){
+
+                nomFichierGraphe = argv[2];
+                analog->setOption(option);
+                option2 = argv[3];
+
+                if(option2 == "-e"){
+
+                    analog->setOption(option2);
+                    if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                        return 1;
+                    }else{
+                        if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                            delete analog;
+                            return 1;
+                        } 
+                    }
+                    if(analog->genererGraph(nomFichierGraphe) != 0) {
+                        delete analog;
+                        return 1;
+                    }
+
+                }else{
+                    cerr<<"Illegal option : " << option2 <<endl;
+                    delete analog;
+                    return 1;
+                }
+
+
+
+            }else if (option == "-t"){
+                
+                analog->setOption(option);
+                optionHeure = stoi(argv[2]);
+                if (optionHeure<24 && optionHeure>0){
+                    ptHeure = &optionHeure;
+                    option2 = argv[3];
+                    
+                    if(option2 == "-e"){
+                        analog->setOption(option2);
+                        if(analog->lireFichier(nomFichier, ptHeure) != 0){
+                            delete analog;
+                            return 1;
+                        }
+                        if(analog->genererGraph(nomFichierGraphe) != 0) {
+                            delete analog;
+                            return 1;
+                        }
+
+                    }else{
+                        cerr<<"Illegal option : " << option2 <<endl;
+                        return 1;
+                    }
+
+                }
+                else{
+                    cerr<<"Illegal value : " << optionHeure <<endl;
+                    return 1;
+                }
+        
+            }            
+            break;
+
+
+
+
+        case 6 : 
+            //options : (-t heure) + (-g nomFichier.pdf) + nomFichier
+            //options : (-g nomFichier.pdf) + (-t heure) + nomFichier  
+
+            option = argv[1];
+            nomFichier = argv[5];
+            if(option == "-g"){
+                nomFichierGraphe = argv[2];
+                option2 = argv[3];
+                analog->setOption(option);
+                if(option2 == "-t"){
+                    analog->setOption(option2);
+                    optionHeure = stoi(argv[4]);
+                    if (optionHeure<24 && optionHeure>0){
+                        ptHeure = &optionHeure;
+                        option3 = argv[5];
+                        if(option3 == "-e"){
+                            analog->setOption(option3);
+                            if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                                delete analog;
+                                return 1;
+                            }else{
+                                if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                                    delete analog;
+                                    return 1;
+                                } 
+                            }
+                        }else{
+                            cerr<<"Illegal option : " << option3 <<endl;
+                            delete analog;
+                            return 1;
+                        }
+                        
+                    }else{
+                        cerr<<"Illegal value : " << optionHeure <<endl;
+                        delete analog;
+                        return 1;
+                    }
+                    
+                }else{
+                    cerr<<"Illegal option : " << option2 <<endl;
+                    delete analog;
+                    return 1;
+                }
+
+            }else if (option == "-t"){
+                    analog->setOption(option);
+                    optionHeure = stoi(argv[2]);
+                    if (optionHeure<24 && optionHeure>0){
+                        ptHeure = &optionHeure;
+                        
+                        option2 = argv[3];
+                        if(option2 == "-g"){ 
+                            analog->setOption(option2);
+                            nomFichierGraphe = argv[4];
+                            option3 = argv[5];
+                            if(option3 == "-e"){
+                                analog->setOption(option3);
+                                if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                                    delete analog;
+                                    return 1;
+                                }else{
+                                    if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                                        delete analog;
+                                        return 1;
+                                    } 
+                                }
+                            }else{
+                                cerr<<"Illegal option : " << option3 <<endl;
+                                delete analog;
+                                return 1;
+                            }
+                            
+                        }else{
+                            cerr<<"Illegal option : " << option2 <<endl;
+                            delete analog;
+                            return 1;   
+                        }
+                    }else{
+                        cerr<<"Illegal value : " << optionHeure <<endl;
+                        delete analog;
+                        return 1;
+                    }
+                    
+            }else{
+                cerr<<"Illegal option : " << option2 <<endl;
+                delete analog;
+                return 1;
+            } 
+            break;
+        
+        case 7 : 
+            //options : (-g nomFichier.pdf) + (-t heure) + -e + nomFichier
+            //options : (-t heure) + (-g nomFichier.pdf) + -e + nomFichier
+
+            option = argv[1];
+            nomFichier = argv[6];
+
+            if(option == "-g"){
+                nomFichierGraphe = argv[2];
+                option2 = argv[3];
+                analog->setOption(option);
+                if(option2 == "-t"){
+                    analog->setOption(option2);
+                    optionHeure = stoi(argv[4]);
+                    if (optionHeure<24 && optionHeure>0){
+                        ptHeure = &optionHeure;
+                        if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                                delete analog;
+                                return 1;
+                            }else{
+                                if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                                    delete analog;
+                                    return 1;
+                                } 
+                            }
+                    }else{
+                        cerr<<"Illegal value : " << optionHeure <<endl;
+                        delete analog;
+                        return 1;
+                    }
+                    
+                }else{
+                    cerr<<"Illegal option : " << option2 <<endl;
+                    delete analog;
+                    return 1;
+                }
+
+            }else if (option == "-t"){
+                    analog->setOption(option);
+                    optionHeure = stoi(argv[2]);
+                    if (optionHeure<24 && optionHeure>0){
+                        ptHeure = &optionHeure;
+                        
+                        option2 = argv[3];
+                        if(option2 == "-g"){ 
+                            analog->setOption(option2);
+                            nomFichierGraphe = argv[4];
+                            if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                                delete analog;
+                                return 1;
+                            }else{
+                                if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                                    delete analog;
+                                    return 1;
+                                } 
+                            }
+                        }else{
+                            cerr<<"Illegal option : " << option2 <<endl;
+                            delete analog;
+                            return 1;   
+                        }
+                    }else{
+                        cerr<<"Illegal value : " << optionHeure <<endl;
+                        delete analog;
+                        return 1;
+                    }
+            }else{
+                cerr<<"Illegal option : " << option2 <<endl;
+                delete analog;
+                return 1;
+            } 
+            break;
+
+        default :
+            cerr<<"Illegal number of option : " << option <<endl;
+            delete analog;
+            return 1; 
+
     }
+
+    delete analog;
+    return 0;
+
+
 }
 

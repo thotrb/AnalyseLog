@@ -86,13 +86,12 @@ void Graph::ConserverLien(set<string> top10){
         
         if( top10.find(iterator->first) == top10.end() ){
             arcs.erase(iterator++);
-            //cout << "Suppression : " << iterator->first << endl;
         }else{
-            //cout << "OK : " << iterator->first << " "  << endl;
             ++iterator;
         }
     }
 }
+
 
 void Graph::genererGraph(ofstream & flux) const{
 
