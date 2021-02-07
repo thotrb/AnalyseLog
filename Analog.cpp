@@ -290,7 +290,7 @@ int main(int argc, char* argv[]){
     
         break;
             
-        case 4 : //options : (-g nomFichier.pdf ou -t heure) + nomFichier
+        case 4 : //options : (-g nomFichier.dot ou -t heure) + nomFichier
             option = argv[1];
             nomFichier = argv[3];
             
@@ -333,8 +333,8 @@ int main(int argc, char* argv[]){
             break;
         
         case 5 : 
-            //options : -e + (-g nomFichier.pdf ou -t heure) + nomFichier
-            //options : (-g nomFichier.pdf ou -t heure) + -e + nomFichier
+            //options : -e + (-g nomFichier.dot ou -t heure) + nomFichier
+            //options : (-g nomFichier.dot ou -t heure) + -e + nomFichier
             option = argv[1];
             nomFichier = argv[4];
 
@@ -451,8 +451,8 @@ int main(int argc, char* argv[]){
 
 
         case 6 : 
-            //options : (-t heure) + (-g nomFichier.pdf) + nomFichier
-            //options : (-g nomFichier.pdf) + (-t heure) + nomFichier  
+            //options : (-t heure) + (-g nomFichier.dot) + nomFichier
+            //options : (-g nomFichier.dot) + (-t heure) + nomFichier  
 
             option = argv[1];
             nomFichier = argv[5];
@@ -542,8 +542,8 @@ int main(int argc, char* argv[]){
             break;
         
         case 7 : 
-            //options : (-g nomFichier.pdf) + (-t heure) + -e + nomFichier
-            //options : (-t heure) + (-g nomFichier.pdf) + -e + nomFichier
+            //options : (-g nomFichier.dot) + (-t heure) + -e + nomFichier
+            //options : (-t heure) + (-g nomFichier.dot) + -e + nomFichier
 
             option = argv[1];
             nomFichier = argv[6];

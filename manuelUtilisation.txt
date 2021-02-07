@@ -25,4 +25,34 @@ horaire [heure, heure+1[.
 Par exemple, si la saisie est [-t 15] alors, seul les hits compris entre 15:00:00 et 15:59:59
 seront retenus pour le top 10.
 
+Il est possible d'utiliser les commandes suivantes : 
+
+    Aucune option : 
+    
+        ./analog nomFichier.log
+    
+    1 option : 
+
+        ./analog -e nomFichier.log
+    
+    2 options :
+
+        ./analog -e -t entier nomFichier.log
+        ./analog -t entier -e nomFichier.log
+
+        ./analog -e -g nomFichier.dot nomFichier.log
+        ./analog -g nomFichier.dot -e nomFichier.log
+        
+        ./analog -g nomFichier.dot -t entier nomFichier.log
+        ./analog -t entier -g nomFichier.dot nomFichier.log
+
+
+    3 options : 
+
+        ./analog -g nomFichier.dot -t entier -e nomFichier.log
+        ./analog -t entier -g nomFichier.dot -e nomFichier.log
+    
+
+
+
 -------------------------------------------------------------------------------
