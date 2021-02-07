@@ -1,0 +1,28 @@
+Manuel d'utilisation
+
+-------------------------------------------------------------------------------
+Cette application permet d'analyser un fichier de log Apache. Elle s'éxécute en
+ligne de commande et permet de générer des documents synthétiques au format GraphViz
+ainsi que des statistiques.
+
+Par défaut, la liste des 10 documents les plus consultés est affiché sur la console 
+sous forme textuelle et par ordre décroissant de popularité. 
+3 options sont proposés :
+[-g nomFichier.dot]
+[-e]
+[-t heure]
+Une seule option peut-être exécutée à la fois.
+
+L'option [-g nomFichier.dot] permet de produire un fichier au format GraphViz.
+Les documents apparaissent sous la forme d'un noeud et chaque arc indique le nombre de
+parcours associés.
+
+L'option [-e] permet d'exclure tous les documents qui ont une extension de type image,
+css ou javascript.
+
+L'option [-t heure] permet de ne prendre en compte que les hits qui sont dans le créneau
+horaire [heure, heure+1[.
+Par exemple, si la saisie est [-t 15] alors, seul les hits compris entre 15:00:00 et 15:59:59
+seront retenus pour le top 10.
+
+-------------------------------------------------------------------------------
