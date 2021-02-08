@@ -151,6 +151,7 @@ void Graph::genererGraph(ofstream & flux) const{
 
     for(iterator = arcs.begin(); iterator != arcs.end(); ++iterator){
         map<string, int>::const_iterator iterator2;
+
         for(iterator2 = iterator->second->lienReference.begin(); iterator2 != iterator->second->lienReference.end(); ++iterator2){
             
 

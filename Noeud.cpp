@@ -20,6 +20,11 @@ using namespace std;
 //-------------------------------------------- Constructeurs - destructeur
 Noeud::Noeud ( const Noeud & unNoeud )
 {
+map<string, int>::const_iterator iterator;
+ for(iterator = unNoeud.lienReference.begin(); iterator != unNoeud.lienReference.end(); ++iterator){
+     lienReference.insert(make_pair(iterator->first, iterator->second));
+}
+
 #ifdef MAP
     cout << "Appel au constructeur de copie de <Noeud>" << endl;
 #endif

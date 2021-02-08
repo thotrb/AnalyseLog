@@ -1,0 +1,1 @@
+../../Main/analog -g graph.dot -t 24 -e ../../LogDeTest/log1.log 

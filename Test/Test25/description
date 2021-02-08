@@ -1,0 +1,1 @@
+Test l'application lorsque l'utilisateur utilise deux options : -g puis un nom de fichier contenant le graph de mauvais type (pas de type .dot).

@@ -425,8 +425,6 @@ int main(int argc, char* argv[]){
                     optionHeure = stoi(argv[4]);
                     if (optionHeure<24 && optionHeure>0){
                         ptHeure = &optionHeure;
-                        option3 = argv[5];
-                        if(option3 == "-e"){
                             analog->setOption(option3);
                             if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
                                 delete analog;
@@ -436,13 +434,7 @@ int main(int argc, char* argv[]){
                                     delete analog;
                                     return 1;
                                 } 
-                            }
-                        }else{
-                            cerr<<"Illegal option : " << option3 <<endl;
-                            delete analog;
-                            return 1;
-                        }
-                        
+                            } 
                     }else{
                         cerr<<"Illegal value : " << optionHeure <<endl;
                         delete analog;
@@ -465,9 +457,6 @@ int main(int argc, char* argv[]){
                         if(option2 == "-g"){ 
                             analog->setOption(option2);
                             nomFichierGraphe = argv[4];
-                            option3 = argv[5];
-                            if(option3 == "-e"){
-                                analog->setOption(option3);
                                 if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
                                     delete analog;
                                     return 1;
@@ -477,12 +466,6 @@ int main(int argc, char* argv[]){
                                         return 1;
                                     } 
                                 }
-                            }else{
-                                cerr<<"Illegal option : " << option3 <<endl;
-                                delete analog;
-                                return 1;
-                            }
-                            
                         }else{
                             cerr<<"Illegal option : " << option2 <<endl;
                             delete analog;
@@ -517,7 +500,10 @@ int main(int argc, char* argv[]){
                     optionHeure = stoi(argv[4]);
                     if (optionHeure<24 && optionHeure>0){
                         ptHeure = &optionHeure;
-                        if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
+                        option3 = argv[5];
+                        if(option3 == "-e"){
+                            analog->setOption(option3);
+                            if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
                                 delete analog;
                                 return 1;
                             }else{
@@ -525,7 +511,18 @@ int main(int argc, char* argv[]){
                                     delete analog;
                                     return 1;
                                 } 
+                                   if(analog->genererGraph(nomFichierGraphe) != 0) {
+                                        delete analog;
+                                        return 1;
+                                    }
+
                             }
+                        }else{
+                            cerr<<"Illegal option : " << option3 <<endl;
+                            delete analog;
+                            return 1;
+                        }
+                        
                     }else{
                         cerr<<"Illegal value : " << optionHeure <<endl;
                         delete analog;
@@ -543,19 +540,30 @@ int main(int argc, char* argv[]){
                     optionHeure = stoi(argv[2]);
                     if (optionHeure<24 && optionHeure>0){
                         ptHeure = &optionHeure;
-                        
                         option2 = argv[3];
                         if(option2 == "-g"){ 
                             analog->setOption(option2);
                             nomFichierGraphe = argv[4];
-                            if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
-                                delete analog;
-                                return 1;
-                            }else{
-                                if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                            option3 = argv[5];
+                            if(option3 == "-e"){
+                                analog->setOption(option3);
+                                if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
                                     delete analog;
                                     return 1;
-                                } 
+                                }else{
+                                    if(analog->lireFichier(nomFichier, ptHeure) != 0){ 
+                                        delete analog;
+                                        return 1;
+                                    }
+                                   if(analog->genererGraph(nomFichierGraphe) != 0) {
+                                        delete analog;
+                                        return 1;
+                                    }
+                                }
+                            }else{
+                                cerr<<"Illegal option : " << option3 <<endl;
+                                delete analog;
+                                return 1;
                             }
                         }else{
                             cerr<<"Illegal option : " << option2 <<endl;
