@@ -1,4 +1,4 @@
-CPPFLAGS= -ansi -pedantic -Wall -std=c++11 -g
+CPPFLAGS= -ansi -pedantic -Wall -std=c++11 -g 
 
 analog : Analog.o LectureLog.o Noeud.o Graph.o
 	@echo "edl de Analog"

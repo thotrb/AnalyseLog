@@ -74,7 +74,7 @@ public:
 protected:
 //----------------------------------------------------- Attributs protégées
 int nbNoeuds = 0;
-std::map <std::string, Noeud> arcs;
+std::map <std::string, Noeud*> arcs;
 
 };
 

@@ -93,5 +93,6 @@ const Log & LectureLog::lireLigne(string & ligneLog) {
         m_dernierLog.navigateur +=  " " + informations[i];
     }
 
+
     return m_dernierLog;   
 }

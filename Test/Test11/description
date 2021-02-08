@@ -1,0 +1,1 @@
+Test le renvoie d'une erreur lorsque l'utilisateur utilise l'option -t mais indique une heure supérieure à 24

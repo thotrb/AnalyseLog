@@ -1,0 +1,22 @@
+digraph{
+node0 [label="/docA.html"];
+node1 [label="/docB.html"];
+node2 [label="/docC.html"];
+node3 [label="/docD.html"];
+node4 [label="/docE.html"];
+node5 [label="/docF.html"];
+node6 [label="/docG.html"];
+node7 [label="/image1.jpg"];
+node8 [label="/image2.jpg"];
+node9 [label="/image3.jpg"];
+node0 -> node0 [label=6];
+node0 -> node1 [label=1];
+node0 -> node2 [label=1];
+node0 -> node3 [label=1];
+node0 -> node4 [label=1];
+node0 -> node5 [label=1];
+node0 -> node6 [label=1];
+node0 -> node7 [label=1];
+node0 -> node8 [label=1];
+node0 -> node9 [label=1];
+}

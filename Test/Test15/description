@@ -1,0 +1,2 @@
+Test que l'application renvoie une erreur lorsque l'utilisateur utilise deux options mais que la deuxieme est inconnue
+comme par exemple -a.

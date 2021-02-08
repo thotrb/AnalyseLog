@@ -1,0 +1,1 @@
+../../Main/analog -g graph.dot ../../LogDeTest/log7.log 

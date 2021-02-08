@@ -83,9 +83,9 @@ private :
 protected:
     LectureLog * lectureLog;
     Graph * graph;
-    bool optionE ;
-    bool optionG ;
-    bool optionT ;
+    bool optionE = false ;
+    bool optionG = false ;
+    bool optionT = false ;
 //----------------------------------------------------- Méthodes protégées
 
 //----------------------------------------------------- Attributs protégés

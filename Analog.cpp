@@ -56,22 +56,6 @@ int Analog::lireFichier(string & fichier, int * optionHeure = nullptr) {
     Log l;
     string line;
     map<string, int> classementRecherches;
-
-    set<string> extensionsNonAutorisees;
-    extensionsNonAutorisees.insert("bmp");
-    extensionsNonAutorisees.insert("ai");
-    extensionsNonAutorisees.insert("eps");
-    extensionsNonAutorisees.insert("jpg");
-    extensionsNonAutorisees.insert("jpeg");
-    extensionsNonAutorisees.insert("pdf");
-    extensionsNonAutorisees.insert("psd");
-    extensionsNonAutorisees.insert("gif");
-    extensionsNonAutorisees.insert("tiff");
-    extensionsNonAutorisees.insert("png");
-    extensionsNonAutorisees.insert("svg");
-    extensionsNonAutorisees.insert("css");
-    extensionsNonAutorisees.insert("jss");
-
     bool insertion = true;
 
 
@@ -84,31 +68,25 @@ int Analog::lireFichier(string & fichier, int * optionHeure = nullptr) {
             insertion = true;
             l = lectureLog->lireLigne(line);
             nbOccurence = 1;
-            
-            /**
-            if(!optionE && !optionT) {
-                //dans le cas sans contraintes
-                
-                if(classementRecherches.find(l.documentRecherche) == classementRecherches.end()){
-                    classementRecherches.insert(make_pair(l.documentRecherche, nbOccurence));
-                }else{
-                    nbOccurence = classementRecherches.find(l.documentRecherche)->second;
-                    nbOccurence ++;
-                    classementRecherches.find(l.documentRecherche)->second += 1;
-
-                }
-                
-                multimp.insert(make_pair(nbOccurence, l.documentRecherche));
-
-            }
-            
-            else if(optionE && !optionT){
-                **/
                 if(optionE){
                     string delimiter = ".";
                     string token;
                     size_t pos = 0;
                     string extensionFichier, document = l.documentRecherche;
+                    set<string> extensionsNonAutorisees;
+                    extensionsNonAutorisees.insert("bmp");
+                    extensionsNonAutorisees.insert("ai");
+                    extensionsNonAutorisees.insert("eps");
+                    extensionsNonAutorisees.insert("jpg");
+                    extensionsNonAutorisees.insert("jpeg");
+                    extensionsNonAutorisees.insert("pdf");
+                    extensionsNonAutorisees.insert("psd");
+                    extensionsNonAutorisees.insert("gif");
+                    extensionsNonAutorisees.insert("tiff");
+                    extensionsNonAutorisees.insert("png");
+                    extensionsNonAutorisees.insert("svg");
+                    extensionsNonAutorisees.insert("css");
+                    extensionsNonAutorisees.insert("js");
 
                     while ((pos = document.find(delimiter)) != string::npos) {
                         token = document.substr(0, pos);
@@ -133,8 +111,6 @@ int Analog::lireFichier(string & fichier, int * optionHeure = nullptr) {
                     }
                     
                 }
-
-
                 if(insertion){
                     if(classementRecherches.find(l.documentRecherche) == classementRecherches.end()){
                         nbOccurence = 1;
@@ -146,38 +122,11 @@ int Analog::lireFichier(string & fichier, int * optionHeure = nullptr) {
                     }
                     multimp.insert(make_pair(nbOccurence, l.documentRecherche));
                 }
+
                 graph->AjouterLien(l.documentRecherche, l.referer);
 
-        }
-/**
-            else if(optionT && !optionE) {
-                
-                int heure = l.temps.heure;
-                if(*optionHeure!=23 && (heure==*optionHeure || heure==*optionHeure+1) ){
-                    if(classementRecherches.find(l.documentRecherche) == classementRecherches.end()){
-                        classementRecherches.insert(make_pair(l.documentRecherche, nbOccurence));
-                    }else{
-                        nbOccurence = classementRecherches.find(l.documentRecherche)->second;
-                        nbOccurence ++;
-                        classementRecherches.find(l.documentRecherche)->second += 1;
-                    }
-                    multimp.insert(make_pair(nbOccurence, l.documentRecherche));
-                }
-                else if(*optionHeure==23 && (heure==*optionHeure || heure==0) ){
-                    if(classementRecherches.find(l.documentRecherche) == classementRecherches.end()){
-                        classementRecherches.insert(make_pair(l.documentRecherche, nbOccurence));
-                    }else{
-                        nbOccurence = classementRecherches.find(l.documentRecherche)->second;
-                        nbOccurence ++;
-                        classementRecherches.find(l.documentRecherche)->second += 1;
-                    }
-                    multimp.insert(make_pair(nbOccurence, l.documentRecherche));
-                }
-            }
-                
-            graph->AjouterLien(l.documentRecherche, l.referer);
-**/
 
+        }
         //Conserve uniquement les 10 premiers éléments recherchés
         set<string> top10; 
         multimap<int, string>::iterator iterator = multimp.begin();
@@ -191,6 +140,8 @@ int Analog::lireFichier(string & fichier, int * optionHeure = nullptr) {
             }
             iterator++;
         }
+
+
 
         if(optionG){
             graph->ConserverLien(top10);
@@ -224,14 +175,15 @@ void Analog::setOption(string option){
 
 int Analog::genererGraph(string nomFichierSortie) const{
     
-
         ofstream stream(nomFichierSortie);
         if(stream){
             graph->genererGraph(stream);
+            stream.close();
             return 0;
         }
         else{
             cerr << "ERROR: Opening stream failed " << nomFichierSortie << endl;
+            stream.close();
             return 1;
         }
     
@@ -270,6 +222,7 @@ int main(int argc, char* argv[]){
         case 2 :  //cas où on n'a que le nom du fichier
             nomFichier = argv[1];
             if(analog->lireFichier(nomFichier, ptHeure) != 0){
+                delete analog;
                 return 1;
             }
             break;
@@ -282,9 +235,11 @@ int main(int argc, char* argv[]){
                 analog->setOption(option);
             }else{
                 cerr<<"Illegal option : " << option <<endl;
+                delete analog;
                 return 1;
             }
             if(analog->lireFichier(nomFichier, ptHeure) != 0){
+                delete analog;
                 return 1;
             }
     
@@ -299,7 +254,7 @@ int main(int argc, char* argv[]){
                 analog->setOption(option);
                 optionHeure = stoi(argv[2]);
 
-                if (optionHeure<24 && optionHeure>0){
+                if (optionHeure<24 && optionHeure>=0){
                     ptHeure = &optionHeure;
                 }
                 else{
@@ -315,6 +270,7 @@ int main(int argc, char* argv[]){
 
                 nomFichierGraphe = argv[2];
                 analog->setOption(option);
+
                 if(analog->verifierExtensionFichierDot(nomFichierGraphe) != 0){
                     return 1;
                 }else{
@@ -324,6 +280,12 @@ int main(int argc, char* argv[]){
                 if(analog->genererGraph(nomFichierGraphe) != 0) {
                     return 1;
                 }
+
+
+            }else if(option=="-e"){
+                option2 = argv[2];
+                cerr<<"Illegal option : " << option2 <<endl;
+                return 1;
             }
             else{
                 cerr<<"Illegal option : " << option <<endl;
@@ -428,19 +390,17 @@ int main(int argc, char* argv[]){
                             delete analog;
                             return 1;
                         }
-                        if(analog->genererGraph(nomFichierGraphe) != 0) {
-                            delete analog;
-                            return 1;
-                        }
 
                     }else{
                         cerr<<"Illegal option : " << option2 <<endl;
+                        delete analog;
                         return 1;
                     }
 
                 }
                 else{
                     cerr<<"Illegal value : " << optionHeure <<endl;
+                    delete analog;
                     return 1;
                 }
         
@@ -615,7 +575,7 @@ int main(int argc, char* argv[]){
             break;
 
         default :
-            cerr<<"Illegal number of option : " << option <<endl;
+            cerr<<"Illegal number of option : " << argc <<endl;
             delete analog;
             return 1; 
 

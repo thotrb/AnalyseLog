@@ -33,6 +33,9 @@ Noeud::~Noeud ( )
 } //----- Fin de ~Noeud
 
 Noeud::Noeud(const string reference){
+#ifdef MAP
+    cout << "Appel au constructeur de <Noeud>" << endl;
+#endif
     lienReference.insert(make_pair(reference, 1));
 }
 

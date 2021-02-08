@@ -1,0 +1,2 @@
+Test l'application lorsque l'utilisateur utilise deux options : -e puis -t mais que la valeur 
+de l'entier passé en parametre est invalide (inférieure à 0 ou supérieure à 23).

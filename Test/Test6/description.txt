@@ -1,2 +1,0 @@
-Ce test permet de vérifier le code de retour de l'executable si l'utilisateur rentre une option non valide comme par exemple l'option "-a".
-

@@ -1,0 +1,2 @@
+Test le bon fonctionnement de l'application avec l'option -e, le programme doit donc prendre en compte tous
+les éléments dans un fichier ne contenant pas d'images ni de fichiers css ou JavaScprit.

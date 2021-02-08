@@ -1,0 +1,3 @@
+Ce test permet de vérifier le code de retour de l'executable si l'utilisateur ne rentre 
+pas le bon nombre de parametre. Pour notre exemple nous prenons le cas où l'utilisateur
+ne rentre aucun parametre.

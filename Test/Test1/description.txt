@@ -1,2 +1,0 @@
-Ce test permet de vérifier le code de retour de l'executable si l'utilisateur ne rentre 
-pas de nom de fichier

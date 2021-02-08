@@ -1,0 +1,3 @@
+Test le bon fonctionnement de l'application avec l'option -t dans un fichier log lorsque qu'aucun fichier n'est présent
+dans l'heure indiquée par l'utilisateur.
+

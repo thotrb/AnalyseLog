@@ -1,0 +1,2 @@
+Test le bon fonctionnement de l'application avec l'option -e, le programme ne doit donc pas prendre en compte les images
+ou les fichiers css ou JavaScript dans un fichier en contenant.

@@ -1,0 +1,2 @@
+Ce test permet de vérifier la production de d'un fichier en sortie du programme 
+testé lorsque l'utilisateur utilise l'option -g et que des cibles ont des précédents communs avec des autres.

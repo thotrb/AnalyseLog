@@ -1,0 +1,2 @@
+Test du code retour lorsque le programme se déroule correctement pour un log qui contient plus de 10 lignes que l'utilisateur n'utilise pas d'options.
+Vérifie donc si le programme classe correctement les différentes cibles en fonction du nombre de hits.
